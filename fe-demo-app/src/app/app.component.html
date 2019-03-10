@@ -1,0 +1,32 @@
+<div class="container">
+  <div style="text-align:center">
+    <h1>
+      Welcome to {{ title }}!
+    </h1>
+  </div>
+
+  <ul class="nav">
+    <li class="nav-item">
+      <a class="nav-link" routerLink="pages/home">Home</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" routerLink="pages/dashboard">Dashboard</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" routerLink="pages/users/user-list">Users</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" routerLink="auth/login">Login</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" routerLink="auth/register">Register</a>
+    </li>
+  </ul>
+
+  <hr>
+
+  <app-alert></app-alert>
+
+  <router-outlet></router-outlet>
+
+</div>

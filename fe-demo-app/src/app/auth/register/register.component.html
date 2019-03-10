@@ -1,0 +1,25 @@
+<p>
+  register works!
+</p>
+
+<form (ngSubmit)="register()">
+  <div class="form-group">
+    <input type="text" name="firstName" [(ngModel)]="user.firstName" required>
+  </div>
+  <div class="form-group">
+    <input type="text" name="lastName" [(ngModel)]="user.lastName" required>
+  </div>
+  <div class="form-group">
+    <input type="text" name="userName" [(ngModel)]="user.userName" required>
+  </div>
+  <div class="form-group">
+    <input type="password" name="password" [(ngModel)]="user.password" required>
+  </div>
+  <div class="form-group">
+    {{user|json}}
+  </div>
+
+  <div class="form-group">
+    <button class="btn btn-primary">Register</button>
+  </div>
+</form>
