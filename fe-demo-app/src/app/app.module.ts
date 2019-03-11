@@ -11,6 +11,9 @@ import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FakeBackendIntercepter } from './_helpers/fake-backend-intercepter';
+import { UserListComponent } from './pages/users/user-list/user-list.component';
+import { UserCreateComponent } from './pages/users/user-create/user-create.component';
+import { UserEditComponent } from './pages/users/user-edit/user-edit.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +22,10 @@ import { FakeBackendIntercepter } from './_helpers/fake-backend-intercepter';
     AlertComponent,
     DashboardComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    UserListComponent,
+    UserCreateComponent,
+    UserEditComponent,
   ],
   imports: [
     BrowserModule,
@@ -28,6 +34,9 @@ import { FakeBackendIntercepter } from './_helpers/fake-backend-intercepter';
     RouterModule.forRoot([
       { path: 'pages/home', component: HomeComponent },
       { path: 'pages/dashboard', component: DashboardComponent },
+      { path: 'pages/users/user-list', component: UserListComponent },
+      { path: 'pages/users/user-create', component: UserCreateComponent },
+      { path: 'pages/users/user-edit', component: UserEditComponent },
       { path: 'auth/login', component: LoginComponent },
       { path: 'auth/register', component: RegisterComponent },
       { path: '', redirectTo: 'pages/home', pathMatch: 'full' },

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AlertService } from 'src/app/_services/alert.service';
 
 @Component({
   selector: 'app-alert',
@@ -7,10 +8,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AlertComponent implements OnInit {
   message: string;
-  constructor() { }
+  statusClass: string;
+  enumStatusClass = {
+    success: 'success',
+    error: 'danger'
+  };
+
+  constructor(private alertService: AlertService) { }
 
   ngOnInit() {
-    this.message = 'alert works!';
+    this.alertService.alertSubject.subscribe((data) => {
+      this.message = data.message;
+      this.statusClass = this.enumStatusClass[data.status];
+    });
   }
 
 }

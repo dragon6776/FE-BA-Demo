@@ -5,6 +5,9 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class UserService {
+  getUsers() {
+    return this.http.get('/users');
+  }
 
   constructor(private http: HttpClient) { }
 

@@ -1,6 +1,6 @@
-import { Injectable } from "@angular/core";
-import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpResponse } from "@angular/common/http";
-import { Observable, of, throwError } from "rxjs";
+import { Injectable } from '@angular/core';
+import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpResponse } from '@angular/common/http';
+import { Observable, of, throwError } from 'rxjs';
 import { delay, mergeMap, materialize, dematerialize } from 'rxjs/operators';
 
 @Injectable()
@@ -10,8 +10,8 @@ export class FakeBackendIntercepter implements HttpInterceptor {
         return JSON.parse(localStorage.getItem('USERS')) || [];
     }
 
-    private getUser(userName, password) {
-        return this.getUsers().find(x => x.userName === userName && x.password === password);
+    private getUser(username, password) {
+        return this.getUsers().find(x => x.username === username && x.password === password);
     }
 
     private getUserById(userId) {
@@ -19,13 +19,13 @@ export class FakeBackendIntercepter implements HttpInterceptor {
     }
 
     private addUser(user) {
-        if(!user || !user.userName || !user.password) {
-            throw('userName & password is required.');
+        if (!user || !user.username || !user.password) {
+            throw new Error(('username & password is required.'));
         }
-        
-        var users = this.getUsers();
-        if(users.some(x=>x.userName === user.userName)) {
-            throw (`user name ${user.userName} is existed.`);
+
+        const users = this.getUsers();
+        if (users.some(x => x.username === user.username)) {
+            throw new Error((`user name ${user.username} is existed.`));
         }
 
         user.id = this.generateId();
@@ -35,13 +35,13 @@ export class FakeBackendIntercepter implements HttpInterceptor {
 
     private deleteUser(userId) {
         const existUser = this.getUserById(userId);
-        if(existUser) {
-            throw('User not found.');
+        if (existUser) {
+            throw new Error(('User not found.'));
         }
 
-        var users = this.getUsers()
+        const users = this.getUsers()
             .filter(x => x.userId !== userId);
-        
+
         this.saveChanges(users);
     }
 
@@ -52,11 +52,11 @@ export class FakeBackendIntercepter implements HttpInterceptor {
     private generateId(): number {
         let newId;
         const users = this.getUsers();
-        if(users.length == 0) {
+        if (users.length === 0) {
             newId = 1;
         } else {
-            let maxId = users.reduce((prevId, curItem) => {
-                if(curItem.id > prevId) {
+            const maxId = users.reduce((prevId, curItem) => {
+                if (curItem.id > prevId) {
                     prevId = curItem.id;
                 }
                 return prevId;
@@ -70,7 +70,7 @@ export class FakeBackendIntercepter implements HttpInterceptor {
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
         // array in local storage for registered users
-        let users: any[] = JSON.parse(localStorage.getItem('users')) || [];
+        const users: any[] = JSON.parse(localStorage.getItem('users')) || [];
 
         // wrap in delayed observable to simulate server api call
         return of(null).pipe(mergeMap(() => {
@@ -78,14 +78,14 @@ export class FakeBackendIntercepter implements HttpInterceptor {
             // authenticate
             if (request.url.endsWith('/users/authenticate') && request.method === 'POST') {
                 // find if any user matches login credentials
-                let filteredUsers = users.filter(user => {
+                const filteredUsers = users.filter(user => {
                     return user.username === request.body.username && user.password === request.body.password;
                 });
 
                 if (filteredUsers.length) {
                     // if login details are valid return 200 OK with user details and fake jwt token
-                    let user = filteredUsers[0];
-                    let body = {
+                    const user = filteredUsers[0];
+                    const body = {
                         id: user.id,
                         username: user.username,
                         firstName: user.firstName,
@@ -96,13 +96,14 @@ export class FakeBackendIntercepter implements HttpInterceptor {
                     return of(new HttpResponse({ status: 200, body: body }));
                 } else {
                     // else return 400 bad request
-                    return throwError({ error: { message: 'Username or password is incorrect' } });
+                    return throwError({ error: { message: 'username or password is incorrect' } });
                 }
             }
 
             // get users
             if (request.url.endsWith('/users') && request.method === 'GET') {
-                // check for fake auth token in header and return users if valid, this security is implemented server side in a real application
+                // check for fake auth token in header and return users if valid,
+                // this security is implemented server side in a real application
                 if (request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
                     return of(new HttpResponse({ status: 200, body: users }));
                 } else {
@@ -113,13 +114,14 @@ export class FakeBackendIntercepter implements HttpInterceptor {
 
             // get user by id
             if (request.url.match(/\/users\/\d+$/) && request.method === 'GET') {
-                // check for fake auth token in header and return user if valid, this security is implemented server side in a real application
+                // check for fake auth token in header and return user if valid,
+                // this security is implemented server side in a real application
                 if (request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
                     // find user by id in users array
-                    let urlParts = request.url.split('/');
-                    let id = parseInt(urlParts[urlParts.length - 1]);
-                    let matchedUsers = users.filter(user => { return user.id === id; });
-                    let user = matchedUsers.length ? matchedUsers[0] : null;
+                    const urlParts = request.url.split('/');
+                    const id = parseInt(urlParts[urlParts.length - 1], null);
+                    const matchedUsers = users.filter(x => x.id === id);
+                    const user = matchedUsers.length ? matchedUsers[0] : null;
 
                     return of(new HttpResponse({ status: 200, body: user }));
                 } else {
@@ -131,12 +133,12 @@ export class FakeBackendIntercepter implements HttpInterceptor {
             // register user
             if (request.url.endsWith('/users/register') && request.method === 'POST') {
                 // get new user object from post body
-                let newUser = request.body;
+                const newUser = request.body;
 
                 // validation
-                let duplicateUser = users.filter(user => { return user.username === newUser.username; }).length;
+                const duplicateUser = users.filter(user => user.username === newUser.username).length;
                 if (duplicateUser) {
-                    return throwError({ error: { message: 'Username "' + newUser.username + '" is already taken' } });
+                    return throwError({ error: { message: 'username "' + newUser.username + '" is already taken' } });
                 }
 
                 // save new user
@@ -150,13 +152,14 @@ export class FakeBackendIntercepter implements HttpInterceptor {
 
             // delete user
             if (request.url.match(/\/users\/\d+$/) && request.method === 'DELETE') {
-                // check for fake auth token in header and return user if valid, this security is implemented server side in a real application
+                // check for fake auth token in header and return user if valid,
+                // this security is implemented server side in a real application
                 if (request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
                     // find user by id in users array
-                    let urlParts = request.url.split('/');
-                    let id = parseInt(urlParts[urlParts.length - 1]);
+                    const urlParts = request.url.split('/');
+                    const id = parseInt(urlParts[urlParts.length - 1], null);
                     for (let i = 0; i < users.length; i++) {
-                        let user = users[i];
+                        const user = users[i];
                         if (user.id === id) {
                             // delete user
                             users.splice(i, 1);
@@ -175,10 +178,10 @@ export class FakeBackendIntercepter implements HttpInterceptor {
 
             // pass through any requests not handled above
             return next.handle(request);
-            
-        }))
 
-        // call materialize and dematerialize to ensure delay even if an error is thrown (https://github.com/Reactive-Extensions/RxJS/issues/648)
+        }))
+        // call materialize and dematerialize to ensure delay
+        // even if an error is thrown (https://github.com/Reactive-Extensions/RxJS/issues/648)
         .pipe(materialize())
         .pipe(delay(500))
         .pipe(dematerialize());
