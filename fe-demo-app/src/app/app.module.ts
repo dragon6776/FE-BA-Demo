@@ -14,6 +14,8 @@ import { FakeBackendIntercepter } from './_helpers/fake-backend-intercepter';
 import { UserListComponent } from './pages/users/user-list/user-list.component';
 import { UserCreateComponent } from './pages/users/user-create/user-create.component';
 import { UserEditComponent } from './pages/users/user-edit/user-edit.component';
+import { RegisterTdfComponent } from './auth/register-tdf/register-tdf.component';
+import { HeroFormComponent } from './pages/hero-form/hero-form.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +28,8 @@ import { UserEditComponent } from './pages/users/user-edit/user-edit.component';
     UserListComponent,
     UserCreateComponent,
     UserEditComponent,
+    RegisterTdfComponent,
+    HeroFormComponent,
   ],
   imports: [
     BrowserModule,
