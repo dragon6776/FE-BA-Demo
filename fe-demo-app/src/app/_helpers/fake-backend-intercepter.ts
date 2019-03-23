@@ -10,15 +10,15 @@ export class FakeBackendIntercepter implements HttpInterceptor {
         return JSON.parse(localStorage.getItem('USERS')) || [];
     }
 
-    private getUser(username, password) {
+    private getUser(username: any, password: any) {
         return this.getUsers().find(x => x.username === username && x.password === password);
     }
 
-    private getUserById(userId) {
+    private getUserById(userId: any) {
         return this.getUsers().find(x => x.userId === userId);
     }
 
-    private addUser(user) {
+    private addUser(user: { username: any; password: any; id: number; }) {
         if (!user || !user.username || !user.password) {
             throw new Error(('username & password is required.'));
         }
@@ -33,7 +33,7 @@ export class FakeBackendIntercepter implements HttpInterceptor {
         this.saveChanges(users);
     }
 
-    private deleteUser(userId) {
+    private deleteUser(userId: any) {
         const existUser = this.getUserById(userId);
         if (existUser) {
             throw new Error(('User not found.'));
@@ -50,12 +50,12 @@ export class FakeBackendIntercepter implements HttpInterceptor {
     }
 
     private generateId(): number {
-        let newId;
+        let newId: number;
         const users = this.getUsers();
         if (users.length === 0) {
             newId = 1;
         } else {
-            const maxId = users.reduce((prevId, curItem) => {
+            const maxId = users.reduce((prevId: number, curItem: { id: number; }) => {
                 if (curItem.id > prevId) {
                     prevId = curItem.id;
                 }
@@ -180,10 +180,10 @@ export class FakeBackendIntercepter implements HttpInterceptor {
             return next.handle(request);
 
         }))
-        // call materialize and dematerialize to ensure delay
-        // even if an error is thrown (https://github.com/Reactive-Extensions/RxJS/issues/648)
-        .pipe(materialize())
-        .pipe(delay(500))
-        .pipe(dematerialize());
+            // call materialize and dematerialize to ensure delay
+            // even if an error is thrown (https://github.com/Reactive-Extensions/RxJS/issues/648)
+            .pipe(materialize())
+            .pipe(delay(500))
+            .pipe(dematerialize());
     }
 }

@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './pages/home/home.component';
@@ -16,6 +16,7 @@ import { UserCreateComponent } from './pages/users/user-create/user-create.compo
 import { UserEditComponent } from './pages/users/user-edit/user-edit.component';
 import { RegisterTdfComponent } from './auth/register-tdf/register-tdf.component';
 import { HeroFormComponent } from './pages/hero-form/hero-form.component';
+import { ValidationMessageComponent } from './_components/validation-message/validation-message.component';
 
 @NgModule({
   declarations: [
@@ -30,10 +31,11 @@ import { HeroFormComponent } from './pages/hero-form/hero-form.component';
     UserEditComponent,
     RegisterTdfComponent,
     HeroFormComponent,
+    ValidationMessageComponent,
   ],
   imports: [
     BrowserModule,
-    FormsModule,
+    ReactiveFormsModule,
     HttpClientModule,
     RouterModule.forRoot([
       { path: 'pages/home', component: HomeComponent },

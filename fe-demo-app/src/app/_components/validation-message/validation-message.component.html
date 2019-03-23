@@ -1,0 +1,11 @@
+<div class="invalid-feedback is-invalid" *ngIf="control.dirty || control.touched">
+  <div *ngIf="control.errors?.required">{{errorMessages.required}}</div>
+  <div *ngIf="control.errors?.maxlength">{{errorMessages.maxLength}}</div>
+  <div *ngIf="control.errors?.minlength">{{errorMessages.minLength}}</div>
+  <div *ngIf="control.errors?.email">{{errorMessages.email}}</div>
+  <div *ngIf="control.errors?.matchOther">{{errorMessages.matchOther}}</div>
+</div>
+
+<!-- <div class="alert alert-warning">`
+  <code> <pre>{{fieldTitle}} - {{control.errors|json}}</pre></code>
+</div> -->
