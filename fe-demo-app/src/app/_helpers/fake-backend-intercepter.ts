@@ -112,6 +112,13 @@ export class FakeBackendIntercepter implements HttpInterceptor {
                 }
             }
 
+            // username is taken
+            if (request.url.startsWith('/users/userNameTaken') && request.method === 'GET') {
+                const userName = request.params.get('userName');
+                const isTaken = users.some(u => u.username === userName);
+                return of(new HttpResponse({ status: 200, body: isTaken }));
+            }
+
             // get user by id
             if (request.url.match(/\/users\/\d+$/) && request.method === 'GET') {
                 // check for fake auth token in header and return user if valid,
